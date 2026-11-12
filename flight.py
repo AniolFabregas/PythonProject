@@ -7,6 +7,8 @@ class Flight:
         self.DepartureTime = DepartureTime
         self.ArrivalTime = ArrivalTime
         self.passengers = passengers
+        self.assignedA = ""
+        self.assignedB = ""
 
 def PrintFlight(Flight):
     print(Flight.id)
@@ -15,6 +17,8 @@ def PrintFlight(Flight):
     print(Flight.DepartureTime)
     print(Flight.ArrivalTime)
     print(Flight.passengers)
+    print(Flight.assignedA)
+    print(Flight.assignedB)
 
 def TimeToMinutes(time):
     parts = time.split(":")
@@ -86,6 +90,46 @@ def RemoveFlight(flights, id):
         i = i + 1
     return -1
 
+def ResetAssignments(flights, algorithm):
+    # Clears the assignments of the algorithm "A" or "B"
+    i = 0
+    while i < len(flights):
+        if algorithm == "A":
+            flights[i].assignedA = ""
+        else:
+            flights[i].assignedB = ""
+        i = i + 1
+
+
+def GetAssigned(flight, algorithm):
+    # Returns the callsign assigned to the flight by the algorithm ("" if not assigned)
+    if algorithm == "A":
+        return flight.assignedA
+    return flight.assignedB
+
+
+def AssignedFlights(flights, algorithm):
+    # Returns the list of flights assigned by the algorithm
+    result = []
+    i = 0
+    while i < len(flights):
+        if GetAssigned(flights[i], algorithm) != "":
+            result.append(flights[i])
+        i = i + 1
+    return result
+
+
+def UnassignedFlights(flights, algorithm):
+    # Returns the list of flights NOT assigned by the algorithm
+    result = []
+    i = 0
+    while i < len(flights):
+        if GetAssigned(flights[i], algorithm) == "":
+            result.append(flights[i])
+        i = i + 1
+    return result
+
+
 
 # test section
 if __name__ == "__main__":
@@ -100,3 +144,8 @@ if __name__ == "__main__":
     print(RemoveFlight(flights, "A99"))  # 0
     print(RemoveFlight(flights, "ZZZ"))  # -1
     SaveFlights(flights, "flights_saved.txt")
+
+    flights[0].assignedA = "TEST"
+    print(len(AssignedFlights(flights, "A")), len(UnassignedFlights(flights, "A")))  # 1 and the rest
+    ResetAssignments(flights, "A")
+    print(len(AssignedFlights(flights, "A")))  # 0

@@ -1,16 +1,18 @@
 
 
 class Aircraft:
-    def __init__(self, callsign, type, capacity):
+    def __init__(self, callsign, type, capacity, location):
         self.callsign = callsign
         self.type = type
         self.capacity = capacity
+        self.location
 
 
 def PrintAircraft(aircraft):
     print(aircraft.callsign)
     print(aircraft.type)
     print(aircraft.capacity)
+    print(aircraft.location)
 
 def LoadAircrafts(filename):
     aircrafts = []
@@ -24,10 +26,10 @@ def LoadAircrafts(filename):
     i = 0
     while i < len(lines):
         parts = lines[i].split()
-        if len(parts) == 3:
+        if len(parts) == 4:
             try:
                 capacity = int(parts[2])
-                aircrafts.append(Aircraft(parts[0], parts[1], capacity))
+                aircrafts.append(Aircraft(parts[0], parts[1], capacity, parts[3]))
             except:
                 print("Line ignored:", lines[i])
         i = i + 1
@@ -38,7 +40,7 @@ def SaveAircrafts(aircrafts, filename):
         i = 0
         while i < len(aircrafts):
             a = aircrafts[i]
-            file.write(a.callsign + " " + a.type + " " + str(a.capacity) + "\n")
+            file.write(a.callsign + " " + a.type + " " + str(a.capacity) + "" + a.location + "\n")
             i = i + 1
         file.close()
 
@@ -61,11 +63,12 @@ def RemoveAircraft(aircrafts, callsign):
         return -1
 
 if __name__ == "__main__":
-    aircraft = Aircraft("AAAA", "A220-100", 135)
+    aircraft = Aircraft("AAAA", "A220-100", 135, "LEBL")
     PrintAircraft(aircraft)
+
     aircrafts = LoadAircrafts("Aircrafts.txt")
     PrintAircrafts(aircrafts)
-    AddAircraft(aircrafts, Aircraft("CCCC", "B737", 189))
+    AddAircraft(aircrafts, Aircraft("CCCC", "B737", 189, "LEMD"))
     print(RemoveAircraft(aircrafts, "CCCC"))  # 0
     print(RemoveAircraft(aircrafts, "ZZZZ"))  # -1
     SaveAircrafts(aircrafts, "aircrafts_saved.txt")
